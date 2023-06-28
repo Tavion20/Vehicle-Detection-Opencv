@@ -1,0 +1,12 @@
+for cars_.mp4 ->
+l1y = 403
+l2y = 544
+
+    cv2.line(new_frame,(342,l1y),(965,l1y),(255,255,255),2)
+    cv2.putText(new_frame,"Line 1",(345,396),cv2.FONT_HERSHEY_COMPLEX,0.8,(0,255,255),2)
+
+    cv2.line(new_frame,(417,l2y),(1180,l2y),(255,255,255),2)
+    cv2.putText(new_frame,"Line 2",(425,537),cv2.FONT_HERSHEY_COMPLEX,0.8,(0,255,255),2)
+
+    cv2.putText(new_frame,f"Going down: {len(set(counter_down))}",(60,40),cv2.FONT_HERSHEY_COMPLEX,0.8,(0,0,0),2)
+    cv2.putText(new_frame,f"Going up: {len(set(counter_up))}",(60,70),cv2.FONT_HERSHEY_COMPLEX,0.8,(0,0,0),2)
