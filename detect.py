@@ -9,7 +9,7 @@ model = YOLO('yolov8s.pt')
 
 tracker = Tracker()
 
-capture = cv2.VideoCapture("Assets/veh3.mp4")
+capture = cv2.VideoCapture("Assets/cars_.mp4")
 # capture.set(cv2.CAP_PROP_BUFFERSIZE,1) #supposedly increases the fps but doesn't work for now
 # algo = cv2.createBackgroundSubtractorMOG2(history=10, varThreshold=50) //ahh it's for shadow detection and stuff, no real need for now 
 
@@ -31,6 +31,7 @@ vh_up ={}
 counter_down=[]
 counter_up=[]
 flag = []
+spdoffence = []
 
 '''
 for getting the positions for lines
@@ -82,20 +83,24 @@ while(capture.isOpened()):
                 color_vehicle = (255, 255, 0)
                 detect.append([x1,y1,x2,y2])
 
-            # elif str(c) == 'truck':
-            #     color_vehicle = (100, 100, 150)
+            elif str(c) == 'truck':
+                color_vehicle = (100, 100, 150)
+                detect.append([x1,y1,x2,y2])
 
-            # elif str(c) == 'motorcycle':
-            #     color_vehicle = (255, 255, 255)
+            elif str(c) == 'motorcycle':
+                color_vehicle = (255, 255, 255)
+                detect.append([x1,y1,x2,y2])
 
-            # elif str(c) == 'bus':
-            #     color_vehicle = (255, 0, 255)
+            elif str(c) == 'bus':
+                color_vehicle = (255, 0, 255)
+                detect.append([x1,y1,x2,y2])
 
-            # elif str(c) == 'bicycle':
-            #     color_vehicle = (0, 255, 255)
+            elif str(c) == 'bicycle':
+                color_vehicle = (0, 255, 255)
+                detect.append([x1,y1,x2,y2])
 
-            # else:
-            #     continue
+            else:
+                continue
 
             cv2.rectangle(new_frame, (x1, y1), (x2, y2), color_vehicle, 2)
             cv2.putText(new_frame, str(c), (x1, y1+3),cv2.FONT_HERSHEY_COMPLEX, 0.5, (57, 255, 20), 2)
@@ -117,14 +122,15 @@ while(capture.isOpened()):
                         counter_down.append(id)
                         distance = 10 #metres
                         speed_ms_down = distance/ elapsed_time_down
-                        speed_kmh_down = speed_ms_down * 3.6
+                        speed_kmh_down = speed_ms_down * 3.6 * 4
                         cv2.circle(new_frame,(cx,cy),4,(0,0,255),-1)
-                        cv2.putText(new_frame,str(id),(cx,cy),cv2.FONT_HERSHEY_COMPLEX,0.8,(0,255,255),2)
+                        cv2.putText(new_frame,str(id),(x2,y2),cv2.FONT_HERSHEY_COMPLEX,0.8,(0,255,255),2)
                         cv2.putText(new_frame,f"{int(speed_kmh_down)}Km/h",(x4,y4),cv2.FONT_HERSHEY_COMPLEX,0.8,(0,255,255),2)
-                        if speed_kmh_down >13:
+                        if speed_kmh_down >60:
                             cv2.rectangle(new_frame, (x3, y3), (x4, y4), (255,165,0), 2)
                             cv2.rectangle(new_frame, (x3-10, y3-10), (x4+10, y4+10), (255,165,0), 3)
                             flag.append(id)
+                            spdoffence.append(speed_kmh_down)
                             
 
             #going up
@@ -137,14 +143,15 @@ while(capture.isOpened()):
                         counter_up.append(id)
                         distance = 10 #metres
                         speed_ms_up = distance/ elapsed_time_up
-                        speed_kmh_up = speed_ms_up * 3.6
+                        speed_kmh_up = speed_ms_up * 3.6 * 4
                         cv2.circle(new_frame,(cx,cy),4,(0,0,255),-1)
-                        cv2.putText(new_frame,str(id),(cx,cy),cv2.FONT_HERSHEY_COMPLEX,0.8,(0,255,255),2)
+                        cv2.putText(new_frame,str(id),(x2,y2),cv2.FONT_HERSHEY_COMPLEX,0.8,(0,255,255),2)
                         cv2.putText(new_frame,f"{int(speed_kmh_up)}Km/h",(x4,y4),cv2.FONT_HERSHEY_COMPLEX,0.8,(0,255,255),2)
-                        if speed_kmh_up >13:
+                        if speed_kmh_up >60:
                             cv2.rectangle(new_frame, (x3, y3), (x4, y4), (255,165,0), 2)
                             cv2.rectangle(new_frame, (x3-10, y3-10), (x4+10, y4+10), (255,165,0), 3)
                             flag.append(id)
+                            spdoffence.append(speed_kmh_up)
                     
                 
         #this is for video -> cars_.mp4
@@ -167,7 +174,15 @@ capture.release()
 cv2.destroyAllWindows()
 
 
-print(f"Vehicles that broke the speed limit(id): {flag}")
+# print(f"Vehicles that broke the speed limit(id): {flag}")
+# print(spdoffence)
+# print("\n")
+print("**********************************************")
+print("Vehicles that broke the speed limit(id): \n")
+spdx=0
+for spds in spdoffence:
+    print("Vehicle with id:"+str(flag[spdx])+" was travelling at "+str(int(spdoffence[spdx]))+"km/h.")
+    spdx=spdx+1
 
 
 
