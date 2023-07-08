@@ -9,7 +9,7 @@ model = YOLO('yolov8s.pt')
 
 tracker = Tracker()
 
-capture = cv2.VideoCapture("Assets/cars_.mp4")
+capture = cv2.VideoCapture("Assets/veh3.mp4")
 # capture.set(cv2.CAP_PROP_BUFFERSIZE,1) #supposedly increases the fps but doesn't work for now
 # algo = cv2.createBackgroundSubtractorMOG2(history=10, varThreshold=50) //ahh it's for shadow detection and stuff, no real need for now 
 
